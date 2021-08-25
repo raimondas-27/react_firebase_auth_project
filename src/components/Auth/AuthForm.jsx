@@ -1,10 +1,15 @@
-import {useState} from 'react';
+import {useState, useContext} from 'react';
 import axios from "axios";
 import classes from './AuthForm.module.css';
 import {apiKey} from "../../config";
+import AuthContext from "../../store/auth-context";
+
 
 
 const AuthForm = () => {
+
+   const authCtx = useContext(AuthContext);
+
    const [isLogin, setIsLogin] = useState(true);
 
    const switchAuthModeHandler = () => {
@@ -37,7 +42,11 @@ const AuthForm = () => {
             password: password,
             returnSecureToken: true,
          });
-         console.log('response OK', response.data);
+         console.log('response OK', response.data.idToken);
+
+         authCtx.login(response.data.idToken);
+         //sekmingo atsakymo vieta
+
       } catch (error) {
          console.log('Catch block');
          console.log(error.response.data.error.message);
