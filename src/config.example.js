@@ -1,0 +1,1 @@
+export const apiKey = "you web api key goes here";
