@@ -1,12 +1,15 @@
-import {useState, useContext} from 'react';
-import axios from "axios";
+import React, {useState, useContext} from 'react';
+import {useHistory} from "react-router-dom";
 import classes from './AuthForm.module.css';
-import {apiKey} from "../../config";
 import AuthContext from "../../store/auth-context";
+import {sendData} from "../../utils/requests";
+import {toast} from "react-toastify";
 
 
 
 const AuthForm = () => {
+
+   let history = useHistory();
 
    const authCtx = useContext(AuthContext);
 
@@ -30,29 +33,28 @@ const AuthForm = () => {
 
          console.log('Login action');
          url =
-             'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + apiKey;
+             'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
       }
       if (!isLogin) {
          url =
-             'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + apiKey;
+             'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
       }
-      try {
-         const response = await axios.post(url, {
-            email: email,
-            password: password,
-            returnSecureToken: true,
-         });
-         console.log('response OK', response.data.idToken);
 
-         authCtx.login(response.data.idToken);
-         //sekmingo atsakymo vieta
+      const response = await sendData(
+          url,
+          {
+             email: email,
+             password: password,
+             returnSecureToken: true,
+          }
+      );
+      if (response) {
+         authCtx.login(response.data.idToken)
+         history.push("/")
+         toast.success("login was successful");
 
-      } catch (error) {
-         console.log('Catch block');
-         console.log(error.response.data.error.message);
-         alert('Error: ' + error.response.data.error.message);
       }
-      setIsLoading(false);
+
    };
 
 
