@@ -1,3 +1,4 @@
+import React from "react";
 import {useState, useContext} from "react";
 import classes from './ProfileForm.module.css';
 import AuthContext from "../../store/auth-context";
@@ -19,6 +20,7 @@ const ProfileForm = () => {
 
    //gauti input reiksme
    const [password, setpassword] = useState("")
+   const [name, setName] = useState("");
 
    //perrimti formos valdyma
 
@@ -34,7 +36,7 @@ const ProfileForm = () => {
           }
       );
 
-      if(response) {
+      if (response) {
          history.push("/")
          toast.info("password was changed");
       }
@@ -44,19 +46,32 @@ const ProfileForm = () => {
 
 
    return (
-       <form onSubmit={submitHandler} className={classes.form}>
-          <div className={classes.control}>
-             <label htmlFor='new-password'>New Password</label>
-             <input value={password}
-                    onChange={(event) => setpassword(event.target.value)}
-                    type='password'
-                    id='new-password'/>
+          <div>
+             <form onSubmit={submitHandler} className={classes.form}>
+                <div className={classes.control}>
+                   <label htmlFor='new-password'>New Password</label>
+                   <input value={password}
+                          onChange={(event) => setpassword(event.target.value)}
+                          type='password'
+                          id='new-password'
+                   />
+                </div>
+                <div className={classes.action}>
+                   <button>Change Password</button>
+                </div>
+             </form>
+             <div className={classes.control}>
+                <label htmlFor='new-password'>Your new name</label>
+                <input value={name}
+                       onChange={(event) => setName(event.target.value)}
+                       type='name'
+                       id='name'
+                />
+                <button> Change name </button>
+             </div>
           </div>
-          <div className={classes.action}>
-             <button>Change Password</button>
-          </div>
-       </form>
-   );
+   )
+       ;
 }
 
 export default ProfileForm;

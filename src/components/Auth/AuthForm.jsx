@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {useHistory} from "react-router-dom";
 import classes from './AuthForm.module.css';
 import AuthContext from "../../store/auth-context";
@@ -15,6 +15,13 @@ const AuthForm = () => {
 
    const [isLogin, setIsLogin] = useState(true);
 
+   useEffect(() => {
+      return () => {
+         setIsLogin(true);
+      };
+   }, []);
+
+
    const switchAuthModeHandler = () => {
       setIsLogin((prevState) => !prevState);
    };
@@ -22,6 +29,7 @@ const AuthForm = () => {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const [isLoading, setIsLoading] = useState(false);
+
 
    const submitHandler = async (event) => {
       event.preventDefault();
@@ -50,13 +58,14 @@ const AuthForm = () => {
       );
       if (response) {
          authCtx.login(response.data.idToken)
-         history.push("/")
+         setIsLoading(false);
+         history.replace("/")
          toast.success("login was successful");
 
+         return;
       }
-
+      setIsLoading(false);
    };
-
 
    return (
        <section className={classes.auth}>
